@@ -10,7 +10,15 @@
     url="good/vit" 
     >
       <a-box scale = "100 100 100"></a-box>
-      <a-text value="Năm" color="#FFFFFF" align="center" width="5"></a-text>
+      <a-entity id="box-and-text" position="0 0 0" rotation="90 90 270" scale="0 0 0" 
+                animation="property: scale; to: 1.9 2.3 0.02; dur: 2000; easing: easeInOutQuad">
+        <!-- Box element -->
+        <a-box color="#4B4B4B" position="0 0 0"></a-box>
+        <a-box material="src: #myImage;" position="0 0.25 -2" scale="0.8 0.4 0 "></a-box>
+        <!-- Text element synchronized with the box -->
+        <a-text value="ok" color="#FFFFFF" position="0.3 0 1" align="center" width="1"></a-text>
+        <a-text value="okokok" color="#FFFFFF" position="-0.2 0 1" align="center" width="1" ></a-text>
+      </a-entity>
     </a-nft>
   </a-scene>
 </body>
