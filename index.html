@@ -39,6 +39,8 @@
 
     // Liên tục cập nhật kích thước box khi camera di chuyển
     camera.addEventListener('componentchanged', updateBoxSize);
+    // Khi khởi động lần đầu, cập nhật luôn kích thước box
+    updateBoxSize();
   </script>
 </a-scene>
   <script src="index.js">
