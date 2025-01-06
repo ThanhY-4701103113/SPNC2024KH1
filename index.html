@@ -18,6 +18,31 @@
     <!-- Đối tượng xoay quanh -->
     <a-box position="0 1 -5" rotation="0 45 0" color="red" scale="1 1 1" look-at="[camera]">
     </a-box>
+    <!-- Thành phần tùy chỉnh -->
+  <script>
+    AFRAME.registerComponent('distance-scale', {
+      schema: {
+        minScale: {type: 'number', default: 0.5}, // Kích thước tối thiểu
+        maxScale: {type: 'number', default: 3},  // Kích thước tối đa
+      },
+      tick: function () {
+        const cameraEl = document.querySelector('#camera');
+        const objectEl = this.el;
+
+        // Lấy vị trí của camera và đối tượng
+        const cameraPosition = cameraEl.object3D.position;
+        const objectPosition = objectEl.object3D.position;
+
+        // Tính khoảng cách giữa camera và đối tượng
+        const distance = cameraPosition.distanceTo(objectPosition);
+
+        // Tính toán scale dựa trên khoảng cách (tăng/giảm kích thước)
+        const scale = THREE.MathUtils.clamp(distance / 5, this.data.minScale, this.data.maxScale);
+        objectEl.setAttribute('scale', `${scale} ${scale} ${scale}`);
+      }
+    });
+  </script>
+
   </a-scene>
   
 </body>
