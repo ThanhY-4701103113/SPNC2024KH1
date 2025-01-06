@@ -1,39 +1,24 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>AR Scale with Distance</title>
-    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <script src="https://cdn.rawgit.com/jeromeetienne/ar.js/2.0.1/aframe/build/aframe-ar.min.js"></script>
-    <script>
-      // Component to scale object based on distance to camera
-      AFRAME.registerComponent('scale-with-distance', {
-        schema: { type: 'selector' },
-        tick: function () {
-          const camera = this.el.sceneEl.camera;
-          const object = this.el.object3D;
-          if (camera && object) {
-            // Calculate distance between camera and object
-            const distance = camera.position.distanceTo(object.position);
-
-            // Adjust scale based on distance (prevent it from getting too small)
-            const scale = Math.max(1 / distance, 0.1);
-            object.scale.set(scale, scale, scale);
-          }
-        }
-      });
-    </script>
-  </head>
-  <body>
-    <a-scene vr-mode-ui="enabled: false" embedded arjs="trackingMethod: best; sourceType: webcam;">
-      <!-- Camera with default position -->
-      <a-camera gps-camera="simulateLatitude: 37.7749; simulateLongitude: -122.4194" look-controls></a-camera>
-
-      <!-- Box that scales with distance to camera -->
-      <a-box 
-        position="0 0 -5" 
-        color="red" 
-        scale-with-distance></a-box>
-
-    </a-scene>
-  </body>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Học tập cùng Ý</title>
+  <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa93967b5412487cd94b290b/dist/aframe-master.min.js"></script>
+  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <a-scene vr-mode-ui="enabled: false" embedded>
+    <!-- Camera -->
+    <a-camera position="0 0 0">
+    </a-camera>
+  
+    <!-- Đối tượng xoay quanh -->
+    <a-box position="0 1 -5" rotation="0 45 0" color="red" scale="1 1 1" look-at="[camera]">
+    </a-box>
+  </a-scene>
+  
+</body>
 </html>
