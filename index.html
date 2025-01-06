@@ -10,40 +10,43 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-  <a-scene vr-mode-ui="enabled: false">
+<a-scene vr-mode-ui="enabled: false">
   <!-- Camera phản ứng theo chuyển động của điện thoại -->
   <a-camera id="camera" look-controls="pointerLockEnabled: true; touchEnabled: true;" position="0 1.6 0"></a-camera>
 
   <!-- Đối tượng (box) sẽ thay đổi kích thước dựa trên khoảng cách với camera -->
   <a-box id="box" position="0 1 -5" scale="1 1 1" material="color: red;"></a-box>
 
-  
-</a-scene>
   <script>
-    // Lấy đối tượng camera và box
-    const camera = document.querySelector("#camera");
-    const box = document.querySelector("#box");
+    document.querySelector('a-scene').addEventListener('loaded', () => {
+      const camera = document.querySelector("#camera");
+      const box = document.querySelector("#box");
 
-    // Cập nhật kích thước của box theo khoảng cách với camera
-    function updateBoxSize() {
-      const cameraPosition = camera.getAttribute('position');
-      const boxPosition = box.getAttribute('position');
-      
-      // Tính khoảng cách giữa camera và box
-      const distance = Math.sqrt(Math.pow(cameraPosition.x - boxPosition.x, 2) +
-                                 Math.pow(cameraPosition.y - boxPosition.y, 2) +
-                                 Math.pow(cameraPosition.z - boxPosition.z, 2));
-      
-      // Thay đổi kích thước box tùy theo khoảng cách
-      const scale = Math.max(1, 5 - distance); // Kích thước sẽ nhỏ dần khi di chuyển xa
-      box.setAttribute('scale', `${scale} ${scale} ${scale}`);
-    }
+      // Cập nhật kích thước của box theo khoảng cách với camera
+      function updateBoxSize() {
+        const cameraPosition = camera.getAttribute('position');
+        const boxPosition = box.getAttribute('position');
+        
+        // Tính khoảng cách giữa camera và box
+        const distance = Math.sqrt(Math.pow(cameraPosition.x - boxPosition.x, 2) +
+                                   Math.pow(cameraPosition.y - boxPosition.y, 2) +
+                                   Math.pow(cameraPosition.z - boxPosition.z, 2));
+        
+        // Điều chỉnh kích thước box: khoảng cách càng gần thì box càng lớn
+        const scale = Math.max(1, 5 - distance); // Box to lên khi gần camera, nhỏ lại khi xa
 
-    // Liên tục cập nhật kích thước box khi camera di chuyển
-    camera.addEventListener('componentchanged', updateBoxSize);
-    // Khi khởi động lần đầu, cập nhật luôn kích thước box
-    updateBoxSize();
+        // Set lại kích thước box dựa trên khoảng cách
+        box.setAttribute('scale', `${scale} ${scale} ${scale}`);
+      }
+
+      // Liên tục cập nhật kích thước box khi camera di chuyển
+      camera.addEventListener('componentchanged', updateBoxSize);
+
+      // Khi khởi động lần đầu, cập nhật luôn kích thước box
+      updateBoxSize();
+    });
   </script>
+</a-scene>
   <script src="index.js">
   </script>
 </body>
