@@ -10,21 +10,37 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-  <a-scene>
-    <!-- Thêm ánh sáng để box hiển thị rõ -->
-    <a-light type="directional" position="0 5 5" intensity="1"></a-light>
-    <a-light type="ambient" intensity="0.5"></a-light>
+  <a-scene vr-mode-ui="enabled: false">
+  <!-- Camera phản ứng theo chuyển động của điện thoại -->
+  <a-camera id="camera" look-controls="pointerLockEnabled: true; touchEnabled: true;" position="0 1.6 0"></a-camera>
 
-    <!-- Thêm camera với look-controls để di chuyển quanh box -->
-    <a-camera position="0 1.6 0" look-controls>
-      <a-entity position="0 0 -3">
-        <a-text value="Move around to view the box!" color="black" align="center"></a-text>
-      </a-entity>
-    </a-camera>
+  <!-- Đối tượng (box) sẽ thay đổi kích thước dựa trên khoảng cách với camera -->
+  <a-box id="box" position="0 1 -5" scale="1 1 1" material="color: red;"></a-box>
 
-    <!-- Box cố định trong không gian -->
-    <a-box position="0 1 -5" rotation="0 45 0" color="blue" depth="1" height="1" width="1"></a-box>
-  </a-scene>
+  <script>
+    // Lấy đối tượng camera và box
+    const camera = document.querySelector("#camera");
+    const box = document.querySelector("#box");
+
+    // Cập nhật kích thước của box theo khoảng cách với camera
+    function updateBoxSize() {
+      const cameraPosition = camera.getAttribute('position');
+      const boxPosition = box.getAttribute('position');
+      
+      // Tính khoảng cách giữa camera và box
+      const distance = Math.sqrt(Math.pow(cameraPosition.x - boxPosition.x, 2) +
+                                 Math.pow(cameraPosition.y - boxPosition.y, 2) +
+                                 Math.pow(cameraPosition.z - boxPosition.z, 2));
+      
+      // Thay đổi kích thước box tùy theo khoảng cách
+      const scale = Math.max(1, 5 - distance); // Kích thước sẽ nhỏ dần khi di chuyển xa
+      box.setAttribute('scale', `${scale} ${scale} ${scale}`);
+    }
+
+    // Liên tục cập nhật kích thước box khi camera di chuyển
+    camera.addEventListener('componentchanged', updateBoxSize);
+  </script>
+</a-scene>
   <script src="index.js">
   </script>
 </body>
