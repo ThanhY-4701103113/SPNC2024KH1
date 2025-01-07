@@ -1,48 +1,90 @@
-// Get the interactive box and text elements
-const The = document.querySelector('#box-and-text');
+const nftData = [
+  { url: "Model/C5_12_1", src: "Object/C5_12_1.png" },
+  { url: "Model/C5_12_2", src: "Object/C5_12_2.png" },
+  { url: "Model/C5_12_3", src: "Object/C5_12_3.png" },
+  { url: "Model/C5_12_4", src: "Object/C5_12_4.png" },
+  { url: "Model/C5_13_1", src: "Object/C5_13_1.png" },
+  { url: "Model/C5_13_2", src: "Object/C5_13_2.png" },
+  { url: "Model/C5_13_3", src: "Object/C5_13_3.png" },
+  { url: "Model/C5_13_4", src: "Object/C5_13_4.png" },
+  { url: "Model/C5_13_5", src: "Object/C5_13_5.png" },
+  { url: "Model/C5_13_6", src: "Object/C5_13_6.png" },
+  { url: "Model/C5_13_7", src: "Object/C5_13_7.png" },
+  { url: "Model/C5_13_8", src: "Object/C5_13_8.png" },
+  { url: "Model/C5_13_9", src: "Object/C5_13_9.png" },
+  { url: "Model/C5_13_10", src: "Object/C5_13_10.png" },
+  { url: "Model/C5_13_11", src: "Object/C5_13_11.png" },
+];
+const scene = document.getElementById("scene");
 
-// Variables to keep track of mouse/touch position and rotation
-let isDragging = false;
-let lastMouseX = 0;
-let lastMouseY = 0;
+nftData.forEach((data) => {
+  const nft = document.createElement("a-nft");
+  nft.setAttribute("type", "nft");
+  nft.setAttribute("url", data.url);
+  // nft.setAttribute("smooth", "true");
+  // nft.setAttribute("smoothCount", "10");
+  // nft.setAttribute("smoothTolerance", "0.02");
+  // nft.setAttribute("smoothThreshold", "3");
 
-// Function to handle mouse/touch down event
-function onPointerDown(event) {
-  isDragging = true;
-  lastMouseX = event.clientX || event.touches[0].clientX;
-  lastMouseY = event.clientY || event.touches[0].clientY;
-}
+  const entity = document.createElement("a-entity");
+  entity.setAttribute("class", "box-and-text");
+  entity.setAttribute("position", "0 0 0");
+  entity.setAttribute("rotation", "0 0 0");
+  entity.setAttribute("scale", "1.5 1.5 1.5");
+  entity.setAttribute("visible","true");
+  
+  const image = document.createElement("a-image");
+  image.setAttribute("src", data.src); // Đường dẫn tới ảnh trong thư mục Object/
+  image.setAttribute("position", "0 0 0");
+  image.setAttribute("width", "300");
+  image.setAttribute("height", "300");
 
-// Function to handle mouse/touch move event
-function onPointerMove(event) {
-  if (isDragging) {
-    const currentX = event.clientX || event.touches[0].clientX;
-    const currentY = event.clientY || event.touches[0].clientY;
-    const deltaX = currentX - lastMouseX;
-    const deltaY = currentY - lastMouseY;
-    
-    // Update box rotation based on movement
-    const TheRotation = The.getAttribute('rotation');
-    The.setAttribute('rotation', {
-      x: TheRotation.x + deltaY * 0.2,
-      y: TheRotation.y + deltaX * 0.2,
-      z: TheRotation.z
+  entity.appendChild(image);
+  // nft.appendChild(entity);
+  
+  scene.appendChild(nft);
+  scene.appendChild(entity);
+});
+var tpic=1;
+//Sự kiện nft
+document.addEventListener('DOMContentLoaded', function () {
+  // Lấy tất cả các thẻ NFT
+  const nftMarkers = document.querySelectorAll('a-nft');
+  const enti = document.querySelectorAll('.box-and-text');
+  const trackedEntities = {};
+  nftMarkers.forEach((marker, index) => {
+    marker.addEventListener('markerFound', () => {
+      // Lấy vị trí của marker (tọa độ) trong không gian 3D
+      const position = marker.getAttribute('position'); // Trả về chuỗi "x y z"
+      console.log('Position data type:', typeof position);
+      console.log(position.x);
+      console.log(position.y);
+      console.log(position.z);
+      console.log('NFT marker found at position:', index + 1); 
+      tpic=index+1;
+      // enti[index].setAttribute("position", "0 0 -1300");
+      enti[index].setAttribute("rotation", "0 0 0");
+      // enti[index].setAttribute("scale", "1.5 1.5 1.5");
+      trackedEntities[index] = true;
     });
-    lastMouseX = currentX;
-    lastMouseY = currentY;
-  }
-}
+    marker.addEventListener('markerLost', () => {
+      console.log('NFT marker lost!');
 
-// Function to handle mouse/touch up event
-function onPointerUp() {
-  isDragging = false;
-}
-
-// Add event listeners for mouse and touch events
-document.addEventListener('mousedown', onPointerDown);
-document.addEventListener('mousemove', onPointerMove);
-document.addEventListener('mouseup', onPointerUp);
-
-document.addEventListener('touchstart', onPointerDown);
-document.addEventListener('touchmove', onPointerMove);
-document.addEventListener('touchend', onPointerUp);
+    });
+    // Lấy vị trí liên tục
+    const updateMarkerPosition = () => {
+      if (trackedEntities[index]) {
+        const position = marker.object3D.position; // Truy cập trực tiếp vị trí thông qua `object3D`
+        console.log(`Marker ${index + 1} position:`, position);
+        enti[index].setAttribute("position", `${position.x+250} ${position.y+250} ${position.z/1.5}`);
+        // Cập nhật vị trí cho đối tượng liên quan (nếu có)
+        // const attachedEntity = marker.querySelector('.box-and-text');
+        // if (attachedEntity) {
+        //   attachedEntity.setAttribute('position', position);
+        // }
+      }
+      requestAnimationFrame(updateMarkerPosition); // Tiếp tục lặp lại
+    };
+    updateMarkerPosition(); // Bắt đầu vòng lặp
+  });
+});
