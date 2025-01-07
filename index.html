@@ -10,41 +10,14 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-  <a-scene vr-mode-ui="enabled: false" embedded>
-  <!-- Camera -->
-  <a-camera id="camera" position="0 1.6 0">
-  </a-camera>
-
-  <!-- Đối tượng hộp -->
-  <a-box id="box" position="0 1 -5" rotation="0 45 0" color="blue" scale="1 1 1" look-at="#camera">
-  </a-box>
-
-  <!-- Script cập nhật -->
-  <script>
-    AFRAME.registerComponent('update-scale', {
-      schema: {
-        factor: {type: 'number', default: 0.2} // Hệ số thay đổi kích thước
-      },
-      init: function () {
-        this.cameraEl = document.querySelector('#camera'); // Lấy camera
-      },
-      tick: function () {
-        const cameraPosition = this.cameraEl.object3D.position; // Lấy vị trí camera
-        const objectPosition = this.el.object3D.position; // Lấy vị trí hộp
-
-        // Tính khoảng cách
-        const distance = cameraPosition.distanceTo(objectPosition);
-
-        // Cập nhật scale dựa trên khoảng cách
-        const scale = distance * this.data.factor; // Quy mô tăng dần theo khoảng cách
-        this.el.setAttribute('scale', `${scale} ${scale} ${scale}`);
-      }
-    });
-
-    // Gắn thành phần 'update-scale' vào hộp
-    document.querySelector('#box').setAttribute('update-scale', 'factor: 0.5');
+  <a-scene
+    id="scene"
+    vr-mode-ui="enabled: false;"
+    arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
+  >
+    <a-entity camera></a-entity>
+  </a-scene>
+  <script src="in.js">
   </script>
-</a-scene>
-  
 </body>
 </html>
